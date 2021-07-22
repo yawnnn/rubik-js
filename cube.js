@@ -3,7 +3,12 @@ class Cube {
   constructor(dim) {
     let front, side, top;
     
-    this.animation = new Animation();
+    this.movement = {
+      tomove: [],
+      frames_left: 0,
+      axis: 0,
+      dir: 0,
+    }
     
     this.cubies = [];
     
@@ -32,23 +37,30 @@ class Cube {
       }
     }
   }
+
+  animate(axis, dir) {
+    this.movement.tomove = [];
+    this.movement.frames_left = aframes;
+    this.movement.axis = axis;
+    this.movement.dir = dir;
+  }
   
   update() {
-    if (this.animation.frames_left > 0) {
-      for (let i = 0; i < this.animation.tomove.length; i++) {
-        this.animation.tomove[i].rotate(PI/(2 * aframes) * this.animation.dir, this.animation.axis);
+    if (this.movement.frames_left > 0) {
+      for (let i = 0; i < this.movement.tomove.length; i++) {
+        this.movement.tomove[i].rotate(PI/(2 * aframes) * this.movement.dir, this.movement.axis);
       }
-      this.animation.frames_left--;
+      this.movement.frames_left--;
     }
   }
   
   rotate(axis, dir, depth) {
-    if (this.animation.frames_left <= 0) {
-      this.animation.animate(axis, dir, aframes);
+    if (this.movement.frames_left <= 0) {
+      this.animate(axis, dir);
       
       for (let i = 0; i < this.cubies.length; i++) {
         if (abs(this.cubies[i].pos[axis] - l * depth) < 0.01) {
-          this.animation.tomove.push(this.cubies[i]);
+          this.movement.tomove.push(this.cubies[i]);
         }
       }
     }
