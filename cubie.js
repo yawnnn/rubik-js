@@ -1,10 +1,10 @@
 class Cubie {
   
   constructor(i, j, k, front, side, top) {
-    if (i === -min_ && j === -min_ && k === -min_)
-      this.highlight = true;
-    else 
-      this.highlight = false;
+    // if (i === -min_ && j === -min_ && k === -min_)
+    //   this.highlight = true;
+    // else 
+    //   this.highlight = false;
 
     this.faces_to_draw = [];
     
@@ -94,6 +94,7 @@ class Cubie {
         pos = this.add_vec(this.pos, this.n[j % 3]);
       if (j >= 3)
         pos = this.add_vec(this.pos, this.invert(this.n[j % 3]));
+        
       i1 = ((j % 3) + 1) % 3;
       i2 = ((j % 3) + 2) % 3;
       n1 = this.n[i1];

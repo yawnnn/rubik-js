@@ -15,21 +15,22 @@ class Cube {
     for (let i = -min_; i < max_; i++) {
       for (let j = -min_; j < max_; j++) {
         for (let k = -min_; k < max_; k++) {
-          if (i != -min_ && i != max_-1 && j != -min_ && j != max_-1 && k != -min_ && k != max_-1)
+          if (i == 0 && j == 0 && k == 0)
             continue;
+
           if (i == -min_)
-          side = ORANGE;
-          if (i == max_ - 1)
+            side = ORANGE;
+          else if (i == max_ - 1)
             side = RED;
 
           if (j == -min_)
             top = WHITE;
-          if (j == max_ - 1)
+          else if (j == max_ - 1)
             top = YELLOW;
 
           if (k == -min_)
             front = BLUE;
-          if (k == max_ - 1)
+          else if (k == max_ - 1)
             front = GREEN;
           
           this.cubies.push(new Cubie(i, j , k, front, side, top));

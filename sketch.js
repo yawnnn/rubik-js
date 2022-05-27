@@ -1,11 +1,11 @@
 let WHITE, YELLOW, RED, ORANGE, GREEN, BLUE;
 
-let l = 50;
-let hl = l/2.;
-let dim = 3;
-let min_ = Math.floor(dim/2.);
-let max_ = Math.ceil(dim/2.);
-let aframes = 10;
+const l = 50;
+const hl = l/2.;
+const dim = 3;
+const min_ = Math.floor(dim/2.);
+const max_ = Math.ceil(dim/2.);
+const aframes = 10;
 
 let ax = 0;
 let ay = 0;
@@ -14,7 +14,7 @@ let rubik;
 
 function setup() {
   createCanvas(500, 500, WEBGL);
-  
+
   WHITE = color('##F3F3F3');
   YELLOW = color('#FE0');
   RED = color('#F00');
