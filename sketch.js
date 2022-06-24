@@ -1,10 +1,10 @@
-const len = 50;
-const min_ = 0;
-const max_ = 3;
+const len = 80;
+const min_ = -1;
+const max_ = 2;
 
-const verx = len * -1.5;
-const very = len * -1.5;
-const verz = len * -1.5;
+// const verx = len * -1.5;
+// const very = len * -1.5;
+// const verz = len * -1.5;
 
 let WHITE, YELLOW, RED, ORANGE, GREEN, BLUE, BLACK;
 
@@ -13,8 +13,6 @@ let ay = 0;
 
 let system;
 let cube;
-
-// STANDARDIZE FUNCTION NAMES
 
 function setup() {
   createCanvas(len * 10, len * 10, WEBGL);
@@ -27,7 +25,7 @@ function setup() {
   BLUE = color('#00F');
   BLACK = color('#000');
   
-  system = new Coordinate_System(verx, very, verz);
+  system = new Coordinate_System();
   cube = new Cube();
 }
 
@@ -44,6 +42,31 @@ function draw() {
 }
 
 function mouseDragged() { 
-  ay += map(pmouseX - mouseX, 0, width, 0, PI/3);
-  ax += map(pmouseY - mouseY, 0, height, 0, PI/3);
+  ay += map(pmouseX - mouseX, 0, width, 0, PI);
+  ax += map(pmouseY - mouseY, 0, height, 0, PI);
+}
+
+function keyPressed() {
+  let dir = keyIsDown(SHIFT) ? -1 : 1;
+  
+  switch(key.toLowerCase()) {
+    case 'w':
+      cube.twist(1, min_, dir);
+      break;
+    case 's':
+      cube.twist(1, max_-1, dir);
+      break;
+    case 'a':
+      cube.twist(0, min_, dir);
+      break;
+    case 'd':
+      cube.twist(0, max_-1, dir);
+      break;
+    case 'q':
+      cube.twist(2, min_, dir);
+      break;
+    case 'e':
+      cube.twist(2, max_-1, dir);
+      break;
+  }
 }

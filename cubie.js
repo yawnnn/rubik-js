@@ -2,6 +2,7 @@ class Cubie {
 
     constructor(i, j, k, front, side, top) {
       this.faces_to_draw = [];
+      this.first = true;
       
       if (i === max_-1)
         this.faces_to_draw.push(3)
@@ -24,11 +25,13 @@ class Cubie {
     }
     
     show() {
-      let pos = system.translate_vec(dot(len, this.slot));
+      let offset = system.translate_vec(dot(-len, [0.5, 0.5, 0.5]))
+      let center = system.translate_vec(dot(len, this.slot));
+      let pos = add(center, offset);
       let l = len;
 
       for (let i = 0; i < 2; i++) {
-        let mods = [dot(l, system.get_uv(0)), dot(l, system.get_uv(1)), dot(l, system.get_uv(2))];
+        let mods = system.base.map((elmt) => dot(l, elmt));
         let mod_ij = add(mods[0], mods[1]);
         let mod_ik = add(mods[0], mods[2]);
         let mod_jk = add(mods[1], mods[2]);

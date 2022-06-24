@@ -8,7 +8,7 @@ class Cube {
       for (let i = min_; i < max_; i++) {
         for (let j = min_; j < max_; j++) {
           for (let k = min_; k < max_; k++) {
-            if (i == 1 && j == 1 && k == 1)
+            if (i == 0 && j == 0 && k == 0)
               continue;
   
             if (i == min_)
@@ -31,6 +31,14 @@ class Cube {
         }
       }
     }
+
+    // twist(axis, side, dir) {
+    //   for (let i = 0; i < this.cubies.length; i++) {
+    //     if (abs(this.cubies[i].slot[axis] - side) <= 0.01) {
+    //       this.cubies[i].rotate(axis);
+    //     }
+    //   }
+    // }
     
     show() {
       for (let i = 0; i < this.cubies.length; i++) {
