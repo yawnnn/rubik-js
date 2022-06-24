@@ -24,11 +24,11 @@ class Cubie {
     }
     
     show() {
-      let pos = get_coords_in_system(origin, base, dot(len, this.slot));
+      let pos = system.translate_vec(dot(len, this.slot));
       let l = len;
 
       for (let i = 0; i < 2; i++) {
-        let mods = [dot(l, ui), dot(l, uj), dot(l, uk)];
+        let mods = [dot(l, system.get_uv(0)), dot(l, system.get_uv(1)), dot(l, system.get_uv(2))];
         let mod_ij = add(mods[0], mods[1]);
         let mod_ik = add(mods[0], mods[2]);
         let mod_jk = add(mods[1], mods[2]);

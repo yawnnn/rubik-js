@@ -8,8 +8,8 @@ class Cube {
       for (let i = min_; i < max_; i++) {
         for (let j = min_; j < max_; j++) {
           for (let k = min_; k < max_; k++) {
-            // if (i == 1 && j == 1 && k == 1)
-            //   this.cubies.push(new Cubie(i, j, k, BLACK, BLACK, BLACK, this));
+            if (i == 1 && j == 1 && k == 1)
+              continue;
   
             if (i == min_)
               side = ORANGE;

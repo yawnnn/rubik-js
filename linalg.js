@@ -16,7 +16,22 @@ function rotate3d(v, axis, angle) {
     v[i2] = x * sin(angle) + y * cos(angle);
 }
 
-function get_coords_in_system(origin, base, v) {
+function rotate3d_static(v, axis, angle) {
+    let result = [];
+    let i1 = (axis + 1) % 3;
+    let i2 = (axis + 2) % 3;
+
+    let x = v[i1];
+    let y = v[i2];
+
+    result[axis] = v[axis];
+    result[i1] = x * cos(angle) - y * sin(angle);
+    result[i2] = x * sin(angle) + y * cos(angle);
+
+    return result;
+}
+
+function get_vector_in_system(origin, base, v) {
     // v_OB = O + ui * v.x + uj * v.y + uk * v.z
 
     return add(origin, 
