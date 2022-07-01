@@ -32,13 +32,13 @@ class Cube {
       }
     }
 
-    // twist(axis, side, dir) {
-    //   for (let i = 0; i < this.cubies.length; i++) {
-    //     if (abs(this.cubies[i].slot[axis] - side) <= 0.01) {
-    //       this.cubies[i].rotate(axis);
-    //     }
-    //   }
-    // }
+    twist(axis, side, dir) {
+      for (let i = 0; i < this.cubies.length; i++) {
+        if (abs(this.cubies[i].slot[axis] - side) <= 0.01) {
+          this.cubies[i].rotate(axis);
+        }
+      }
+    }
     
     show() {
       for (let i = 0; i < this.cubies.length; i++) {

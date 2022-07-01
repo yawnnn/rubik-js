@@ -20,18 +20,48 @@ class Cubie {
         this.faces_to_draw.push(2)
       
       this.slot = [i, j, k];
+      this.dir = [[1, 0 ,0 ],
+                  [0, 1, 0],
+                  [0, 0, 1]];
       
       this.colors = [side, top, front]
+      this.bak = [side, top, front];
+    }
+
+    rotate(axis) {
+      rotate3d(this.slot, axis, PI/2);
+      rotate3d(this.dir[0], axis, PI/2);
+      rotate3d(this.dir[1], axis, PI/2);
+      rotate3d(this.dir[2], axis, PI/2);
+    }
+
+    is_inside(x, y) {
+      let pos = system.translate_vec(dot(len, this.slot));
+      return Math.sqrt(Math.pow((x - pos[0]), 2), Math.pow((y - pos[1]), 2)) <= max_dist_cubie;
+    }
+
+    highlight() {
+      this.colors = [color('#0'), color('#0'), color('#0')];
+    }
+
+    unhighlight() {
+      this.colors = [...this.bak];
     }
     
     show() {
-      let offset = system.translate_vec(dot(-len, [0.5, 0.5, 0.5]))
       let center = system.translate_vec(dot(len, this.slot));
+
+      let offset = add3(...this.dir);
+      offset = dot(-len/2, offset);
+      offset = system.translate_vec(offset);
+
       let pos = add(center, offset);
-      let l = len;
+      pos = add(pos, system.origin);
+
+      let mult = [1, -1];
 
       for (let i = 0; i < 2; i++) {
-        let mods = system.base.map((elmt) => dot(l, elmt));
+        let mods = this.dir.map((elmt) => system.translate_vec(dot(len * mult[i], elmt)));
         let mod_ij = add(mods[0], mods[1]);
         let mod_ik = add(mods[0], mods[2]);
         let mod_jk = add(mods[1], mods[2]);
@@ -67,7 +97,6 @@ class Cubie {
         }
 
         pos = add(pos, add3(...mods));
-        l = -len;
       }
     }
   }

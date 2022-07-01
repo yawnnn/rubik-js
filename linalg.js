@@ -31,13 +31,10 @@ function rotate3d_static(v, axis, angle) {
     return result;
 }
 
-function get_vector_in_system(origin, base, v) {
-    // v_OB = O + ui * v.x + uj * v.y + uk * v.z
-
-    return add(origin, 
-        add3(dot(v[0], base[0]), 
+function change_of_basis(base, v) {
+    return add3(dot(v[0], base[0]), 
             dot(v[1], base[1]), 
-            dot(v[2], base[2])));
+            dot(v[2], base[2]));
 }
   
 function invert(v) {

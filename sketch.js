@@ -2,6 +2,9 @@ const len = 80;
 const min_ = -1;
 const max_ = 2;
 
+const max_dist = (Math.sqrt(2) * len * 3) / 2;
+const max_dist_cubie = ((Math.sqrt(2) * len) / 2) * 2/3;
+
 // const verx = len * -1.5;
 // const very = len * -1.5;
 // const verz = len * -1.5;
@@ -36,9 +39,33 @@ function draw() {
   system.rotate(0, -PI/8 + ax);
   
   cube.show();
+  stroke(0);
+  strokeWeight(2);
+  line(-len * 1.5, 160, 0, len * 1.5, 160, 0);
 
   // Gotta reset, matrix mult is NOT commutative
   system.reset();
+}
+
+function mousePressed() {
+  let mx = map(mouseX, 0, width, -width/2, width/2);
+  let my = map(mouseY, 0, height, -height/2, height/2);
+  
+  if (Math.sqrt(mx * mx + my * my) <= max_dist) {
+    for (let i = 0; i < cube.cubies.length; i++) {
+      if (cube.cubies[i].is_inside(mx, my)) {
+        cube.cubies[i].highlight();
+      }
+    }
+  }
+
+  console.log(max_dist);
+}
+
+function mouseReleased() {
+  for (let i = 0; i < cube.cubies.length; i++) {
+    cube.cubies[i].unhighlight();
+  }
 }
 
 function mouseDragged() { 
