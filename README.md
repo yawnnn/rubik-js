@@ -1,4 +1,4 @@
-# Rubik_p5js
+# rubik-js
 Rubik cube animation in Javascript with p5js library. Just for fun of course
 
 ## Todo
