@@ -1,72 +1,92 @@
-let WHITE, YELLOW, RED, ORANGE, GREEN, BLUE;
+// late-initialized
+let Color = {
+    WHITE: null,
+    YELLOW: null,
+    RED: null,
+    ORANGE: null,
+    GREEN: null,
+    BLUE: null,
+}
 
-const l = 50;
-const hl = l/2.;
-const dim = 3;
-const min_ = Math.floor(dim/2.);
-const max_ = Math.ceil(dim/2.);
-const aframes = 10;
-
-let ax = 0;
-let ay = 0;
-
-let rubik;
+let rubik = null;
+let angle_x = 0;
+let angle_y = 0;
 
 function setup() {
-  createCanvas(500, 500, WEBGL);
+    createCanvas(500, 500, WEBGL);
 
-  WHITE = color('##F3F3F3');
-  YELLOW = color('#FE0');
-  RED = color('#F00');
-  ORANGE = color('#F90');
-  GREEN = color('#0C0');
-  BLUE = color('#00F');
-  
-  rubik = new Cube(dim);
+    // color() is not visible before this
+    Color.WHITE = color("##F3F3F3");
+    Color.YELLOW = color("#FE0");
+    Color.RED = color("#F00");
+    Color.ORANGE = color("#F90");
+    Color.GREEN = color("#0C0");
+    Color.BLUE = color("#00F");
+
+    rubik = newCube();
 }
 
 function draw() {
-  background(220);
-  rotateX(-PI/8 + ax);
-  rotateY(PI/4 - ay);
-  
-  fill(0)
-  box(l*(dim - 2), l*(dim - 2), l*(dim - 2), 0, 0)
-  
-  rubik.update();
-  rubik.show();
-}
+    background(220);
+    rotateX(-PI / 8 + angle_x);
+    rotateY(PI / 4 - angle_y);
 
-function mousePressed() {
-  
+    rubik.update();
+    rubik.show();
 }
 
 function mouseDragged() {
-  ay += map(pmouseX - mouseX, 0, width, 0, PI);
-  ax += map(pmouseY - mouseY, 0, height, 0, PI);
+    angle_y += map(pmouseX - mouseX, 0, width, 0, PI);
+    angle_x += map(pmouseY - mouseY, 0, height, 0, PI);
 }
 
 function keyPressed() {
-  let dir = keyIsDown(SHIFT) ? -1 : 1;
-  
-  switch(key.toLowerCase()) {
-    case 'w':
-      rubik.rotate(1, dir, -min_);
-      break;
-    case 's':
-      rubik.rotate(1, dir, max_-1);
-      break;
-    case 'a':
-      rubik.rotate(0, dir, -min_);
-      break;
-    case 'd':
-      rubik.rotate(0, dir, max_-1);
-      break;
-    case 'q':
-      rubik.rotate(2, dir, -min_);
-      break;
-    case 'e':
-      rubik.rotate(2, dir, max_-1);
-      break;
-  }
+    let clockwise = !keyIsDown(SHIFT);
+
+    switch (key.toUpperCase()) {
+        // Moves
+        case 'E':
+            rubik.move(Faces.FRONT, clockwise);
+            break;
+        case 'Q':
+            rubik.move(Faces.BACK, clockwise);
+            break;
+        case 'D':
+            rubik.move(Faces.RIGHT, clockwise);
+            break;
+        case 'A':
+            rubik.move(Faces.LEFT, clockwise);
+            break;
+        case 'W':
+            rubik.move(Faces.UP, clockwise);
+            break;
+        case 'S':
+            rubik.move(Faces.DOWN, clockwise);
+            break;
+
+        // Reset cube
+        case 'R':
+            rubik = newCube();
+            break;
+    }
 }
+
+function newCube() {
+    const width = 150;
+    const dimensions = 3;
+    const framerate = 10;
+
+    return new Cube(width, dimensions, framerate);
+}
+
+// runs console.log the first 20 times only
+const debug = (function () {
+    let count = 0;
+
+    return (...data) => {
+        if (count < 20) {
+            console.log(data);
+            count++;
+        }
+    };
+})();

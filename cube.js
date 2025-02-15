@@ -1,80 +1,104 @@
+const Axis = (() => {
+    return Object.freeze({
+        X: 0,
+        Y: 1,
+        Z: 2,
+    });
+})();
+
+const Faces = (() => {
+    // Color is late-initialized, so i need to store a function to it
+    const Face = (axis, dir, colorGetter, str) => ({
+        axis: axis,
+        dir: dir,
+        get color() { return colorGetter(); },
+        str: str,
+    });
+
+    return Object.freeze({
+        RIGHT: Face(Axis.X, 1, () => Color.RED, "RIGHT"),
+        LEFT: Face(Axis.X, -1, () => Color.ORANGE, "LEFT"),
+        DOWN: Face(Axis.Y, 1, () => Color.YELLOW, "DOWN"),
+        UP: Face(Axis.Y, -1, () => Color.WHITE, "UP"),
+        FRONT: Face(Axis.Z, 1, () => Color.GREEN, "FRONT"),
+        BACK: Face(Axis.Z, -1, () => Color.BLUE, "BACK"),
+    });
+})();
+
 class Cube {
-  
-  constructor(dim) {
-    let front, side, top;
-    
-    this.movement = {
-      tomove: [],
-      frames_left: 0,
-      axis: 0,
-      dir: 0,
-    }
-    
-    this.cubies = [];
-    
-    for (let i = -min_; i < max_; i++) {
-      for (let j = -min_; j < max_; j++) {
-        for (let k = -min_; k < max_; k++) {
-          if (i == 0 && j == 0 && k == 0)
-            continue;
+    constructor(width, dimensions, framerate) {
+        this.width = width;
+        this.dimensions = dimensions;
+        this.move_animation = null;
+        this.framerate = framerate;
 
-          if (i == -min_)
-            side = ORANGE;
-          else if (i == max_ - 1)
-            side = RED;
+        let cubies_width = this.width / this.dimensions;
 
-          if (j == -min_)
-            top = WHITE;
-          else if (j == max_ - 1)
-            top = YELLOW;
+        // working from the center
+        let min = -Math.floor(dimensions / 2.);
+        let max = Math.ceil(dimensions / 2.);
 
-          if (k == -min_)
-            front = BLUE;
-          else if (k == max_ - 1)
-            front = GREEN;
-          
-          this.cubies.push(new Cubie(i, j , k, front, side, top));
+        this.cubies = [];
+
+        for (let i = min; i < max; i++) {
+            for (let j = min; j < max; j++) {
+                for (let k = min; k < max; k++) {
+                    if (i == 0 && j == 0 && k == 0)
+                        continue;
+
+                    let pos = Vec.mult(new Vec(i, j, k), cubies_width);
+                    let faces = [];
+
+                    if (i == min)
+                        faces.push(Faces.LEFT);
+                    else if (i == max - 1)
+                        faces.push(Faces.RIGHT);
+
+                    if (j == min)
+                        faces.push(Faces.UP);
+                    else if (j == max - 1)
+                        faces.push(Faces.DOWN);
+
+                    if (k == min)
+                        faces.push(Faces.BACK);
+                    else if (k == max - 1)
+                        faces.push(Faces.FRONT);
+
+                    this.cubies.push(new Cubie(pos, cubies_width, faces));
+                }
+            }
         }
-      }
     }
-  }
 
-  animate(axis, dir) {
-    this.movement.tomove = [];
-    this.movement.frames_left = aframes;
-    this.movement.axis = axis;
-    this.movement.dir = dir;
-  }
-  
-  update() {
-    if (this.movement.frames_left > 0) {
-      for (let i = 0; i < this.movement.tomove.length; i++) {
-        this.movement.tomove[i].rotate(PI/(2 * aframes) * this.movement.dir, this.movement.axis);
-      }
-      this.movement.frames_left--;
-    }
-  }
-  
-  rotate(axis, dir, depth) {
-    if (this.movement.frames_left <= 0) {
-      this.animate(axis, dir);
-      
-      for (let i = 0; i < this.cubies.length; i++) {
-        if (abs(this.cubies[i].pos[axis] - l * depth) < 0.01) {
-          this.movement.tomove.push(this.cubies[i]);
+    move(face, clockwise) {
+        if (this.move_animation && this.move_animation.in_progress()) {
+            console.log("Move in progress");
+            return;
         }
-      }
+
+        let to_move = [];
+        let cubies_width = this.width / this.dimensions;
+
+        this.cubies
+            .filter(cubie => Math.abs(cubie.pos[face.axis] - cubies_width * face.dir) < 0.01)
+            .forEach(cubie => to_move.push(cubie));
+
+        let rotate_dir = clockwise ? 1 : -1;
+
+        this.move_animation = new Animation(this.framerate, () => {
+            to_move.forEach(cubie => cubie.rotate(PI / (2 * this.framerate) * rotate_dir, face.axis));
+        });
     }
-  }
-  
-  show() {
-    for (let i = 0; i < this.cubies.length; i++) {
-      this.cubies[i].show();
+
+    show() {
+        // fill(0)
+        // box(rubik.width * (dim - 2), rubik.width * (dim - 2), rubik.width * (dim - 2), 0, 0)
+
+        this.cubies.forEach(cubie => cubie.show());
     }
-  }
-  
-  touched(x, y) {
-    
-  }
-  
+
+    update() {
+        if (this.move_animation)
+            this.move_animation.step();
+    }
 }
